@@ -1,0 +1,607 @@
+ 
+DELIMITER //
+DROP PROCEDURE IF EXISTS CreateNewParkRequest;
+CREATE PROCEDURE CreateNewParkRequest(_peopleID int, _classification varchar(20) , _nearby int)
+BEGIN
+	DECLARE var int;
+	DECLARE errMsg int;
+	DECLARE _housingID int;
+	DECLARE _approve int;
+	DECLARE leaseCheck int;
+	DECLARE leaserequestCheck int;
+	DECLARE requestCount int;
+	SET errMsg = 0;
+	SELECT count(*) INTO var FROM PEOPLE WHERE peopleID = _peopleID AND spotID IS NULL;
+	SELECT count(*) INTO leaseCheck FROM PEOPLE WHERE peopleID = _peopleID AND leaseID IS NOT NULL;
+	SELECT count(*) INTO leaserequestCheck FROM lease_request WHERE peopleID = _peopleID AND parkingNeeded = 1 AND status <> 'Expired';
+	SELECT count(*) INTO requestCount FROM PARKING_REQUESTS WHERE peopleID = _peopleID AND status != 'Rejected';
+	IF leaseCheck > 0 OR leaserequestCheck > 0 THEN
+		SET _approve = 1;
+	END IF;
+	IF var > 0 AND requestCount = 0 AND _approve > 0 THEN
+		SELECT housingID INTO _housingID FROM people WHERE peopleID = _peopleID;
+		INSERT INTO PARKING_REQUESTS VALUES ( NULL, NULL, NULL, _peopleID, 'pending', _housingID, _classification, _nearby );
+		SET errMsg = 2;
+		SELECT errMsg AS "Error";
+	ELSE 
+		IF var = 0 THEN
+			SELECT errMsg AS "Error";
+		ELSE
+			SET errMsg = 1;
+			SELECT errMsg AS "Error";
+		END IF;
+	END IF;
+END //
+DELIMITER ;
+CALL CreateNewParkRequest(100540004, 'Handicapped', 1);
+ 
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ProcessParkingRequest;
+CREATE PROCEDURE ProcessParkingRequest(_requestID int)
+	BEGIN
+	DECLARE _peopleID int;
+	DECLARE _housingID int;
+	DECLARE _classification varchar(20);
+	DECLARE finished int;
+	DECLARE spotFound int;
+	DECLARE _nearby int; 
+	DECLARE _lotID int;
+	DECLARE _spotID int; 
+	DECLARE _spotCount int;
+	DECLARE spotCategory int;
+	DECLARE _spotIDstatus varchar(20);
+	DECLARE _category varchar(20);
+	DECLARE lotCursor CURSOR FOR SELECT lotID from nearby WHERE housingID = _housingID;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;
+	SET finished = 0;
+	SET spotFound = 0;
+	SET spotCategory = 1;
+	SELECT status INTO _spotIDstatus FROM parking_requests WHERE requestID = _requestID;
+	SELECT _spotIDstatus;
+	IF _spotIDstatus = 'Approved' THEN
+		SET spotFound = 3;
+	END IF;
+	SELECT peopleID, housingID, classification, nearby INTO _peopleID, _housingID, _classification, _nearby FROM parking_requests WHERE requestID = _requestID AND (status = 'pending' OR status = 'Rejected');
+	SELECT _peopleID;
+	IF _nearby = 0 THEN
+		SELECT count(spotID), spotID INTO _spotCount, _spotID from parking_spot WHERE lotID = 7 AND availability = 1 AND classification = _classification LIMIT 1;
+		IF _spotCount > 0	THEN
+			SELECT category INTO _category FROM people WHERE peopleID = _peopleID;
+			IF _category = 'Visitor' THEN
+				SET spotCategory = 2;
+			END IF;
+			UPDATE parking_spot SET availability = 0, category = spotCategory WHERE spotID = _spotID;
+			UPDATE people SET spotID = _spotID WHERE peopleID = _peopleID;
+			UPDATE parking_requests SET status = 'Approved' , spotID = _spotID , lotID = 7 WHERE requestID = _requestID;
+			SET spotFound = 1;
+		END IF;
+	END IF;
+	IF _nearby = 1 THEN
+		OPEN lotCursor;
+		loop_label:	LOOP
+					FETCH lotCursor INTO _lotID;
+					IF finished = 1 THEN
+						LEAVE loop_label;
+					END IF;
+					
+					SELECT count(spotID), spotID INTO _spotCount, _spotID from parking_spot WHERE lotID = _lotID AND availability = 1 AND classification = _classification LIMIT 1;
+					IF _spotCount > 0	THEN
+						SELECT category INTO _category FROM people WHERE peopleID = _peopleID;
+						IF _category = 'Visitor' THEN
+							SET spotCategory = 2;
+						END IF;
+						UPDATE parking_spot SET availability = 0, category = spotCategory WHERE spotID = _spotID;
+						UPDATE people SET spotID = _spotID WHERE peopleID = _peopleID;
+						UPDATE parking_requests SET status = 'Approved' , spotID = _spotID , lotID = _lotID WHERE requestID = _requestID;
+						SET spotFound = 1;
+						LEAVE loop_label;
+					END IF;
+				END LOOP loop_label;
+		CLOSE lotCursor;
+	END IF;
+	IF spotFound = 0 THEN
+		UPDATE parking_requests SET status = 'Rejected' WHERE requestID = _requestID;
+	END IF;
+	
+END //
+DELIMITER ;
+ 
+CALL ProcessParkingRequest(3);
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ReturnParkingSpot;
+CREATE PROCEDURE ReturnParkingSpot(_spotID int)
+BEGIN
+	UPDATE parking_spot SET availability = 1, category = 1 WHERE spotID = _spotID;
+	UPDATE people SET spotID = NULL WHERE spotID = _spotID;
+	DELETE FROM parking_requests WHERE spotID = _spotID;	
+END //
+DELIMITER ;
+CALL ReturnParkingSpot(1);
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS CancelParkingRequest;
+CREATE PROCEDURE CancelParkingRequest(_requestID int)
+BEGIN
+	DECLARE _status varchar(20);
+	SELECT status INTO _status FROM parking_requests WHERE requestID = _requestID;
+	IF( _status = 'pending' )	THEN
+		DELETE FROM parking_requests WHERE requestID = _requestID;
+	END IF;	
+END //
+DELIMITER ;
+CALL CancelParkingRequest(4);
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewParkingLotInfo;
+CREATE PROCEDURE ViewParkingLotInfo()
+BEGIN
+select s.spotid AS "SPOT ID", case s.availability when 1 then 'YES' when 0 then 'NO' end as AVAILABLE, n.lotid AS "LOT NUM", l.lotname AS "LOT NAME", 
+h.housingid AS "HOUSE ID", h.housingname AS "HOUSE NAME" from parking_spot s
+, parking_lot l, nearby n, housing h where l.lotid=s.lotid and n.lotid = l.lotid and n.housingid = h.housingid;
+END //
+DELIMITER ;
+CALL ViewParkingLotInfo();
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewCurrentParkingSpot;
+CREATE PROCEDURE ViewCurrentParkingSpot(_peopleID int)
+BEGIN
+DECLARE _spotID int;
+select spotid INTO _spotID from people where peopleid = _peopleID;
+IF _spotID IS NULL THEN
+	select _spotID AS "SPOT ID";
+end IF;
+END //
+DELIMITER ;
+CALL ViewCurrentParkingSpot(100540004);
+ 
+ 
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewParkingRequests;
+CREATE PROCEDURE ViewParkingRequests(_peopleID int)
+BEGIN
+select * from parking_requests where peopleid = _peopleID;
+END //
+DELIMITER ;
+CALL ViewParkingRequests(100540004);
+ 
+ 
+ 
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewVacancies;
+CREATE PROCEDURE ViewVacancies()
+BEGIN
+select p.placeID, h.housingID, h.housingname, p.monthlyRent from places p, 
+housing h where h.housingID = p.housingID AND occupied = 0;
+END //
+DELIMITER ;
+
+CALL ViewVacancies();
+
+
+
+DELIMITER //
+CREATE PROCEDURE roommatematching(peopleIDinput int)
+
+BEGIN
+	DECLARE _sex varchar(20);
+	DECLARE _dateOfBirth DATE;
+	DECLARE _nationality varchar(20);
+	DECLARE _category varchar(20);
+	DECLARE _smoker varchar(20);
+	DECLARE _family varchar(20);
+	DECLARE _peopleID int;
+	DECLARE _roommateName varchar(20);
+	DECLARE _kin varchar(20);
+	DECLARE finished int;
+	DECLARE xkin varchar(20);
+	DECLARE xfamily varchar(20);
+	DECLARE xsex varchar(20);
+	DECLARE xdateOfBirth DATE;
+	DECLARE xnationality varchar(20);
+	DECLARE xcategory varchar(20);
+	
+	DECLARE xsmoker varchar(20);
+
+	
+	DECLARE lotCursor CURSOR FOR SELECT peopleID, family, sex, dateOfBirth, nationality, category, smoker from people WHERE peopleID <> peopleIDinput;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;
+	SET finished = 0;
+	SELECT name INTO xkin FROM kin WHERE peopleID = peopleIDinput;
+	SELECT family, sex, dateOfBirth, nationality, category, smoker INTO xfamily, xsex, xdateOfBirth, xnationality, xcategory, xsmoker from people WHERE peopleID = peopleIDinput;
+	OPEN lotCursor;
+		loop_label:	LOOP
+					FETCH lotCursor INTO _peopleID, _family, _sex, _dateOfBirth, _nationality, _category, _smoker;
+					IF finished = 1 THEN
+						LEAVE loop_label;
+					END IF;
+					SELECT name INTO _kin FROM kin WHERE peopleID = _peopleID;
+					IF xkin = _kin THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;	
+					IF _family = xfamily THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;
+					IF _sex = xsex THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;
+					IF _dateOfBirth = xdateOfBirth THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;
+					IF _nationality = xnationality THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;
+					IF _category = xcategory THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;
+					IF _smoker = xsmoker THEN
+						UPDATE likeness SET likeness = likeness + 1 WHERE peopleID = _peopleID;
+					END IF;
+					
+				END LOOP loop_label;
+		CLOSE lotCursor;
+	SELECT * FROM likeness WHERE likeness = (SELECT MAX(likeness) FROM likeness) LIMIT 1;
+END //
+
+DELIMITER ;
+
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS RaiseMaintenanceTicket;
+CREATE PROCEDURE RaiseMaintenanceTicket(_peopleID int, _ticketIssue varchar(20) , _comments varchar(40), _ticketDate Date)
+BEGIN
+	DECLARE _housingID int(20);
+	DECLARE _staffID int(20);
+	DECLARE _severity int;
+	DECLARE _name varchar(20);
+
+	SELECT housingID INTO _housingID FROM people WHERE peopleID = _peopleID;
+	SELECT staffID INTO _staffID FROM housing WHERE housingID = _housingID;
+	SELECT CONCAT (firstName,' ',lastName) AS name INTO _name FROM people WHERE peopleID = _peopleID;
+	IF _ticketIssue = 'Water' OR _ticketIssue = 'Electricity' THEN
+		SET _severity = 3;
+	ELSE
+		IF _ticketIssue = 'Appliances' OR _ticketIssue = 'Internet'	THEN
+			SET _severity = 2;
+		ELSE
+			IF _ticketIssue = 'Cleaning' OR _ticketIssue = 'Miscellaneous'	THEN
+				SET _severity = 1;
+			ELSE
+				SET _severity = 0;
+			END IF;
+		END IF;		
+	END IF;
+	IF _severity = 0 THEN
+		SELECT _severity AS 'Invalid Request';
+	ELSE	
+		INSERT INTO Maintenance_Ticket VALUES ( NULL, _peopleID, _name,  'pending', _ticketDate, _ticketIssue, _severity, _comments, _housingID, _staffID  );
+	END IF;
+END //
+DELIMITER ;
+CALL RaiseMaintenanceTicket(100540001, 'Water' , 'No Water' , '2015-04-06');
+CALL RaiseMaintenanceTicket(100540001, 'Internet' , 'Internet not working' , '2015-04-06');
+CALL RaiseMaintenanceTicket(100540003, 'Internet' , 'Internet not working' , '2015-03-30');
+CALL RaiseMaintenanceTicket(100540003, 'Water' , 'Bad Water' , '2015-03-11');
+CALL RaiseMaintenanceTicket(100540004, 'Cleaning' , 'Bad Smell' , '2015-02-11');
+CALL RaiseMaintenanceTicket(100540007, 'Cleaning' , 'Cleaning' , '2015-03-15');
+CALL RaiseMaintenanceTicket(200540002, 'Miscellaneous' , 'Window broken' , '2015-04-02');
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewMaintenanceTicketUser;
+CREATE PROCEDURE ViewMaintenanceTicketUser(_peopleID int)
+BEGIN
+	DECLARE _housingID int(20);
+	DECLARE _staffID int(20);
+	DECLARE _name varchar(20);
+	DECLARE _housingName varchar(20);
+	SELECT housingID INTO _housingID FROM people WHERE peopleID = _peopleID;
+	SELECT housingName INTO _housingName FROM housing WHERE housingID = _housingID;
+	SELECT staffID INTO _staffID FROM housing WHERE housingID = _housingID;
+	SELECT CONCAT(firstName,' ',lastName) AS name INTO _name FROM housing_staff WHERE staffID = _staffID;
+	SELECT ticketNo as "TICKET NO", ticketStatus as "STATUS", comments as "Comments", ticketIssue as "Type", 
+	case ticketSeverity when 1 then 'Low' when 2 then 'Medium' when 3 then 'High' end as "SEVERITY", 
+	_housingName AS "House Name", _name as "Staff Name",
+	ticketDate AS "Date of Ticket" FROM maintenance_ticket WHERE peopleID = _peopleID; 
+END //
+DELIMITER ;
+CALL ViewMaintenanceTicketUser(200540001);
+CALL ViewMaintenanceTicketUser(100540003);
+CALL ViewMaintenanceTicketUser(200540002);
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS ViewMaintenanceTicketAdmin;
+CREATE PROCEDURE ViewMaintenanceTicketAdmin(_staffID int)
+BEGIN
+	SELECT ticketNo as "TICKET NO", peopleName AS "Requested By", ticketStatus as "STATUS", ticketIssue as "Type", 
+	case ticketSeverity when 1 then 'Low' when 2 then 'Medium' when 3 then 'High' end as "SEVERITY",
+	ticketDate AS "Date of Ticket" FROM maintenance_ticket WHERE staffID = _staffID ORDER BY ticketSeverity DESC;			
+END //
+DELIMITER ;
+CALL ViewMaintenanceTicketAdmin(1);
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS UpdateTicketStatus;
+CREATE PROCEDURE UpdateTicketStatus(_ticketNo int, _staffID int, _type varchar(20))
+BEGIN
+	DECLARE _validStaff int;
+	
+	SELECT staffID INTO _validStaff FROM maintenance_ticket WHERE ticketNo = _ticketNo;	
+	IF _validStaff = _staffID THEN
+		UPDATE maintenance_ticket SET ticketStatus = _type WHERE ticketNo = _ticketNo;
+	ELSE
+		SELECT _staffID AS "Invalid Staff";
+	END IF;		
+END //
+DELIMITER ;
+CALL UpdateTicketStatus(1,1, 'Processed');
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT changeStatus 
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 10 SECOND	
+	DO 
+	CALL UpdateTicketStatus(1,1, 'Complete');
+	
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS AddNewInvoice;
+CREATE PROCEDURE AddNewInvoice(_leaseID int)
+BEGIN
+	DECLARE _paymentOption varchar(20);
+	DECLARE _rent int;
+	DECLARE _peopleID int;
+	DECLARE _placeID int;
+	DECLARE _housingID int;
+	DECLARE _entryDate DATE;
+	DECLARE _firstDueDate DATE;
+	DECLARE _exitDate DATE;
+	DECLARE _finalInvoice DATE;
+	DECLARE _roomNo int;
+	DECLARE _housingname varchar(20);
+	DECLARE _checkInitInvoice int;
+	DECLARE _securityDeposit int;
+	DECLARE _aggregateDue int;
+	DECLARE _spotRent int;
+	DECLARE _classification varchar(20);
+	DECLARE _totalDue int;
+	DECLARE _otherCharges int;
+	DECLARE _nextBillDate DATE;
+	DECLARE _nextDueDate DATE;
+	DECLARE _currentBill int;
+	DECLARE _refund int;
+	DECLARE _prevPeriod int;
+	DECLARE _period int;
+	DECLARE _nextPeriod int;
+	DECLARE _currDate DATE;
+	DECLARE _spotID int;
+	DECLARE _curDate DATE;
+	
+	SELECT paymentOption, rent, peopleID, placeID, housingID  INTO _paymentOption, _rent, _peopleID, _placeID, _housingID FROM lease WHERE leaseID = _leaseID;
+	SELECT spotID INTO _spotID FROM people WHERE peopleID = _peopleID;
+	SELECT entryDate, DATE_ADD(entryDate, INTERVAL 10 DAY) INTO _entryDate, _firstDueDate  FROM lease WHERE leaseID = _leaseID;
+	SELECT exitDate, DATE_SUB(exitDate, INTERVAL 1 MONTH) INTO _exitDate, _finalInvoice  FROM lease WHERE leaseID = _leaseID;
+	
+	SELECT roomNo INTO _roomNo FROM places WHERE placeID = _placeID AND housingID = _housingID;
+	SELECT housingname INTO _housingname FROM housing WHERE housingID = _housingID;
+	SELECT count(*) INTO _checkInitInvoice FROM invoice WHERE leaseID = _leaseID;
+	SELECT securityDeposit INTO _securityDeposit FROM lease WHERE leaseID = _leaseID;
+	SELECT SUM(totalDue) INTO _aggregateDue FROM invoice WHERE leaseID = _leaseID GROUP BY status = 'billed';
+	IF _spotID IS NULL THEN
+		SET _spotRent = 0;
+	ELSE
+		SELECT classification INTO _classification FROM parking_spot WHERE spotID = _spotID;
+		SELECT rent INTO _spotRent FROM parking_fees WHERE classification = _classification;
+	END IF;
+	SET _totalDue = _rent + _spotRent;
+	SET _otherCharges = 0;
+	IF _paymentOption = 'Monthly'	THEN
+
+		IF _checkInitInvoice = 0 THEN
+			INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, 0, _totalDue, _leaseID, _entryDate, _firstDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE',0, 0, 'billed' );
+		ELSE
+			SELECT CURDATE() INTO _curDate;
+			SELECT DATE_ADD(billDate, INTERVAL 1 MONTH), DATE_ADD(dueDate, INTERVAL 1 MONTH) INTO _nextBillDate, _nextDueDate FROM invoice WHERE leaseID = _leaseID ORDER BY dueDate DESC LIMIT 1;
+			IF _curDate = _nextBillDate	THEN
+				IF _finalInvoice = _nextBillDate	THEN
+					
+					
+					SET _currentBill = _totalDue ;
+					IF _securityDeposit < _aggregateDue THEN
+						SET _otherCharges = _aggregateDue - _securityDeposit;
+						SET _refund = 0;
+					ELSE
+						SET _securityDeposit = _securityDeposit - _aggregateDue;
+						
+						IF _currentBill > _securityDeposit THEN
+							SET _refund = 0;
+							SET _currentBill = _currentBill - _securityDeposit;
+						ELSE
+							SET _refund = _securityDeposit - _currentBill;
+							SET _currentBill = 0;
+						END IF;
+					END IF;
+					SET _totalDue = _currentBill + _otherCharges;
+					INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, _otherCharges, _totalDue, _leaseID, _finalInvoice, _nextDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE', 0, _refund, 'billed' );
+				ELSE
+					SELECT DATE_ADD(billDate, INTERVAL 1 MONTH), DATE_ADD(dueDate, INTERVAL 1 MONTH) INTO _nextBillDate, _nextDueDate FROM invoice WHERE leaseID = _leaseID ORDER BY dueDate DESC LIMIT 1;
+					SET _totalDue = _totalDue + _otherCharges;
+					INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, _otherCharges, _totalDue, _leaseID, _nextBillDate, _nextDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE', 0, 0, 'billed' );
+				END IF;
+			END IF;	
+		END IF;
+			
+		
+	ELSE
+		IF _paymentOption = 'Semester'	THEN
+			IF _checkInitInvoice = 0 THEN
+				SET _currDate = _entryDate;
+				IF MONTH(_currDate) <= 7 AND MONTH(_currDate) >= 6	THEN
+				SET _prevPeriod = 5;
+				SET _period = 2;
+				SET _nextPeriod = 5;
+				ELSE
+					IF MONTH(_currDate) <= 5 AND MONTH(_currDate) >= 1	THEN
+						SET _prevPeriod = 5;
+						SET _period = 5;
+						SET _nextPeriod = 2;
+					ELSE
+						SET _prevPeriod = 2;
+						SET _period = 5;
+						SET _nextPeriod = 5;
+					END IF;
+				END IF;
+
+			ELSE 
+				SELECT billDate INTO _currDate FROM invoice WHERE leaseID = _leaseID ORDER BY dueDate DESC LIMIT 1;
+				IF MONTH(_currDate) <= 7 AND MONTH(_currDate) >= 6	THEN
+					SET _prevPeriod = 2;
+					SET _period = 5;
+					SET _nextPeriod = 5;
+				ELSE
+					IF MONTH(_currDate) <= 5 AND MONTH(_currDate) >= 1	THEN
+						SET _prevPeriod = 5;
+						SET _period = 2;
+						SET _nextPeriod = 5;
+					ELSE
+						SET _prevPeriod = 5;
+						SET _period = 5;
+						SET _nextPeriod = 2;
+					END IF;
+				END IF;
+			END IF;
+			
+			SET _rent = _rent * _period;
+			SET _spotRent = _spotRent * _period;
+			SET _totalDue = _rent + _spotRent + _otherCharges;
+			IF _checkInitInvoice = 0 THEN
+				IF _entryDate = DATE_SUB( DATE_ADD(_exitDate, INTERVAL 1 DAY), INTERVAL _Period MONTH)	THEN
+					SET _currentBill = _totalDue ;
+					IF _currentBill > _securityDeposit THEN
+						SET _refund = 0;
+						SET _currentBill = _currentBill - _securityDeposit;
+					ELSE
+						SET _refund = _securityDeposit - _currentBill;
+						SET _currentBill = 0;
+					END IF;
+
+					SET _totalDue = _currentBill + _otherCharges;
+					INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, 0, _totalDue, _leaseID, _entryDate, _firstDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE',0, _refund, 'billed' );
+				ELSE
+					INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, 0, _totalDue, _leaseID, _entryDate, _firstDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE',0, 0, 'billed' );
+				END IF;
+			ELSE
+				SELECT DATE_ADD(billDate, INTERVAL _prevPeriod MONTH), DATE_ADD(dueDate, INTERVAL _prevPeriod MONTH) INTO _nextBillDate, _nextDueDate FROM invoice WHERE leaseID = _leaseID ORDER BY dueDate DESC LIMIT 1;
+				IF _curDate = _nextBillDate	THEN
+					IF _nextBillDate = DATE_SUB( DATE_ADD(_exitDate, INTERVAL 1 DAY), INTERVAL _period MONTH)	THEN
+						SET _currentBill = _totalDue ;
+						IF _securityDeposit < _aggregateDue THEN
+							SET _otherCharges = _aggregateDue - _securityDeposit;
+							SET _refund = 0;
+						ELSE
+							SET _securityDeposit = _securityDeposit - _aggregateDue;
+							
+							IF _currentBill > _securityDeposit THEN
+								SET _refund = 0;
+								SET _currentBill = _currentBill - _securityDeposit;
+							ELSE
+								SET _refund = _securityDeposit - _currentBill;
+								SET _currentBill = 0;
+							END IF;
+						END IF;
+						SET _totalDue = _currentBill + _otherCharges;
+						INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, _otherCharges, _totalDue, _leaseID, _nextBillDate, _nextDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE', 0, _refund, 'billed' );
+					ELSE
+						INSERT INTO invoice VALUES(NULL, _peopleID, _rent, _spotRent, 0, _otherCharges, _totalDue, _leaseID, _nextBillDate, _nextDueDate, _placeID, _roomNo, _housingID, _housingname, NULL, 'NONE', 0, 0, 'billed' );
+					
+					END IF;
+				END IF;	
+			END IF;
+		END IF;
+	END IF;	
+END //
+DELIMITER ;
+CALL AddNewInvoice(1);
+
+
+DELIMITER //
+DROP PROCEDURE IF EXISTS PayInvoice;
+CREATE PROCEDURE PayInvoice(_peopleID int, _invoiceNo int, _mop varchar(20))
+BEGIN
+	DECLARE _curDate date;
+	DECLARE _totalDue int;
+	DECLARE _dueDate date;
+	DECLARE _status varchar(20);
+	DECLARE errMsg int;
+	SET errMsg = 0;
+	SELECT CURDATE() INTO _curDate;
+	SELECT dueDate, status, totalDue INTO _dueDate, _status, _totalDue FROM invoice WHERE invoiceNo = _invoiceNo;
+	IF _status <> 'billed' THEN
+		SET errMsg = 1;
+		SELECT errMsg AS "ERROR";
+	ELSE
+		IF _curDate > _dueDate THEN
+			UPDATE invoice SET lateFees = 50, totalDue = _totalDue + 50 WHERE invoiceNo = _invoiceNo;
+		END IF;
+		UPDATE invoice SET status = 'paid', methodPayment = _mop, paymentDate = _curDate WHERE invoiceNo = _invoiceNo;
+	END IF;
+END //
+DELIMITER ;
+
+SET GLOBAL event_scheduler = ON;
+
+delimiter //
+CREATE EVENT invoiceGeneration
+    ON SCHEDULE
+      EVERY 1 DAY
+    DO
+      BEGIN
+		DECLARE finished int;
+		DECLARE _leaseID int;
+		DECLARE leaseCursor CURSOR FOR SELECT leaseID from lease;
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET finished = 1;
+		SET finished = 0;
+		OPEN leaseCursor;
+		loop_label:	LOOP
+					FETCH leaseCursor INTO _leaseID;
+					IF finished = 1 THEN
+						LEAVE loop_label;
+					END IF;
+					CALL AddNewInvoice(_leaseID);
+				END LOOP loop_label;
+		CLOSE leaseCursor;
+      END //
+delimiter ;
+DROP PROCEDURE IF EXISTS proc_Lease_Request_Insert
+
+DELIMITER //
+
+CREATE PROCEDURE proc_Lease_Request_Insert(_peopleID int,_startDate date, _endDate date, _rentalPeriod int,
+_pref1 int, _pref2 int, _pref3 int, _payment varchar(10), _parkingNeeded int)
+BEGIN
+	DECLARE _var int;
+	DECLARE _errMsg int;
+	DECLARE _leaseID int;
+	SET _errMsg = 0;
+	SELECT leaseID INTO _leaseID FROM people WHERE peopleID = _peopleID;
+	IF _leaseID IS NOT NULL THEN
+		SET _errMsg = 1;
+		SELECT _errMsg AS "ERROR";
+	ELSE	
+		SELECT count(*) INTO _var FROM lease_request WHERE peopleID = _peopleID AND status = 'Pending';
+		IF _var = 0 THEN
+			INSERT INTO lease_request VALUES (NULL, _peopleID, null, 'Pending', _startDate, _endDate, _rentalPeriod, _pref1, 
+	_pref2, _pref3, _payment, _parkingNeeded) ;
+		ELSE
+			SELECT _errMsg AS "ERROR";
+		END IF;
+	END IF;
+END //	
+DELIMITER ; 
+
+	

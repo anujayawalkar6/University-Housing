@@ -1,0 +1,354 @@
+	
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9011, '31B, Privet Drive', 'London', 'England', '27605');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9012, '31B, Malfoy Drive', 'New York', 'USA', '27506');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9013, '31B, Weasley Road', 'Rome', 'Italy', '27456');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9014, '32A, Granger Road', 'Edinburg', 'Scotland', '25556');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9015, '32A, William Road', 'Brussels', 'Belgium', '2535');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9016, '32A, Krum Road', 'Sofia', 'Bulgaria', '2221');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9017, '32A, Maxime Road', 'Paris', 'France', '2331');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9018, '32A, Dursley Road', 'Raleigh', 'USA', '27606');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9019, '12, Grimaud Place', '', '', '');
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES (9020, '32A, Bagshot Road', 'Zurich', 'Switzerland', '35221');
+
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540001', 'Harry', 'Potter', '9189327078', '9176326078', 9011, '1991-07-21', 'Male', 'Freshman', 'British', 'No', 'None', NULL, 'Placed', 
+'Defence against Dark Arts', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540002', 'Draco', 'Malfoy', '9189327067', NULL, 9012, '1990-06-05', 'Male', 'Freshman', 'American', 'Yes', 'None', NULL, 'Placed', 
+'Muggle Studies', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540003', 'Ron', 'Weasley', '918567067', NULL, 9013, '1986-03-01', 'Male', 'Graduate', 'Italian', 'No', 'None', NULL, 'Placed', 
+'Care of Magical Creatures', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540004', 'Hermione', 'Granger', '9189568567', NULL, 9014, '1986-09-19', 'Female', 'Graduate', 'Scottish', 'No', 'None', NULL, 'Placed', 
+'Muggle Studies', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540005', 'Fred', 'Weasley', '9133368567', '9133368511', 9013, '1982-10-20', 'Male', 'Senior', 'Italian', 'No', 'None', NULL, 'Placed', 
+'Muggle Studies', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540006', 'George', 'Weasley', '9133368568', NULL, 9013, '1982-10-20', 'Male', 'Senior', 'Italian', 'No', 'None', NULL, 'Placed', 
+'Muggle Studies', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540007', 'Bill', 'Weasley', '9198568567', NULL, 9015, '1982-11-29', 'Male', 'Graduate', 'Belgian', 'No', 'Difficulty in Walking', NULL, 'Placed', 
+'Potions', 'Yes', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('200540001', 'Viktor', 'Krum', '9198333567', '9198332233', 9016, '1982-11-29', 'Male', 'Visitor', 'Bulgarian', 'Yes', 'None', NULL, 'Placed', 
+'Coaching-Triwizard Cup', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('200540002', 'Olympe', 'Maxime', '9197773567', NULL, 9017, '1970-05-19', 'Female', 'Visitor', 'French', 'Yes', 'None', NULL, 'Placed', 
+'Guest Lecturer-Triwizard Cup', 'No', NULL, NULL, NULL, NULL, NULL);
+
+INSERT INTO `dummy3`.`people` (`peopleID`, `firstName`, `lastName`, `phone`, `alternatePhone`, `addrID`, `dateOfBirth`, `sex`, `category`, `nationality`, 
+`smoker`, `specialNeeds`, `additionalComments`, `currentStatus`, `courseName`, `family`, `housingID`, `placeID`, `spotID`, `leaseID`, `available`) 
+VALUES ('100540008', 'Vernon', 'Dursley', '9198954357', '9198954786', 9018, '1975-11-29', 'Male', 'Graduate', 'American', 'Yes', NULL, NULL, 'Placed', 
+'Muggle Studies', 'Yes', NULL, NULL, NULL, NULL, NULL);
+
+
+INSERT INTO `dummy3`.`kin` (`peopleID`, `name`, `relationship`, `telephone`, `addrID`) VALUES 
+('100540001', 'Sirius Black', 'Godfather', '9439560752', 9019), 
+('100540002', 'Lucius Malfoy', 'Father', '9439560752', 9012), 
+('100540003', 'Arthur Weasley', 'Father', '9436660752', 9013), 
+('100540004', 'Mr. Granger', 'Father', '9433360752', 9014), 
+('100540005', 'Arthur Weasley', 'Father', '9436660752', 9013), 
+('100540006', 'Arthur Weasley', 'Father', '9436660752', 9013), 
+('100540007', 'Arthur Weasley', 'Father', '9436660752', 9013), 
+('200540001', 'Igor Karkaroff', 'Headmaster', '94363530752', 9016), 
+('200540002', 'Bathilda Bagshot', 'Friend', '94363595752', 9020), 
+('100540008', 'Petunia Dursley', 'Wife', '94363654752', 9018);
+
+
+
+INSERT INTO `dummy3`.`family` (`name`, `peopleID`, `dateOfBirth`) VALUES 
+('Fleur Delacour', '100540007', '1984-03-31'), 
+('Petunia Dursley', '100540008', '1978-12-13'), 
+('Dudley Dursley', '100540008', '2000-06-26');
+
+
+INSERT INTO Address Values('9001','McGonagall Road','Delhi','India','011');
+INSERT INTO Address Values('9002','Snape Road','Lahore','Pakistan','007');
+INSERT INTO Address Values('9003','Flitwick Road','Sydney','Australia','050');
+INSERT INTO Address Values('9004','Sprout Road','Berlin','Germany','05963');
+INSERT INTO Address Values('9005','Dumbledore Road','Gandhinagar','India','382007');
+INSERT INTO Address Values('9009','2751 Cates Avenue Gryffindor Residence Hall','Raleigh NC','United States','27606');
+INSERT INTO Address Values('9010','210 Dan Allen Dr','Raleigh NC','United States','27606');
+
+
+
+INSERT INTO `dummy3`.`housing` (`housingID`, `housingname`, `addrID`, `available`, `type`) VALUES 
+('201', 'Gryffindor Hall', '9009', '1', 'Residence Hall'), 
+('202', 'Slytherin Hall', '9010', '1', 'Residence Hall');
+
+
+
+
+INSERT INTO `dummy3`.`residence_hall` 
+(`housingID`, `name`, `addrID`, `telephoneNo`, `staffID`, `noRooms`, `rent`, `sequrityDeposit`, `nearbyLotID`, `eligibility`, `remaining`) VALUES 
+('201', 'Gryffindor Hall', '9009', '919540001', '1', '5', '400', '400', '1', '1', '5'), 
+('202', 'Slytherin Hall', '9010', '919540002', '2', '3', '450', '500', '2', '2', '3');
+
+
+INSERT INTO `dummy3`.`address` (`addrID`, `street`, `city`, `country`, `zipcode`) VALUES 
+('9006', '315, Gorman Crossings', 'Raleigh, NC', 'USA', '27606'), 
+('9007', '515, University Commons', 'Raleigh, NC', 'USA', '27606'), 
+('9008', '300, Wade Avenue', 'Raleigh, NC', 'USA', '27606');
+
+
+INSERT INTO `dummy3`.`housing` (`housingID`, `housingname`, `addrID`, `available`, `type`) VALUES 
+('101', 'Ravenclaw', '9006', '1', 'GenApartment'), 
+('102', 'Ravenclaw', '9006', '1', 'GenApartment'), 
+('103', 'Hufflepuff', '9007', '1', 'GenApartment'), 
+('104', 'Hufflepuff', '9007', '1', 'GenApartment'), 
+('105', 'Hogwarts', '9008', '1', 'SharedApartment'), 
+('106', 'Hogwarts', '9008', '1', 'SharedApartment'), 
+('107', 'Hogwarts', '9008', '1', 'SharedApartment');
+
+
+
+
+INSERT INTO `Apartment` (`housingID`, `addrID`, `noBed`, `noBath`, `apartmentComplexName`, `phoneNumber`, `rentPerBedroom`, `secuDeposit`, `managerID`, `roomNumber`, `apartmentType`) VALUES
+('101', '9006', 3, 3, 'Ravenclaw', '919540003', 350, 400, 3, 3, 0),
+('102', '9006', 4, 4, 'Ravenclaw', '919540003', 350, 400, 3, 4, 0),
+('103', '9007', 3, 3, 'Hufflepuff', '919540004', 375, 450, 4, 3, 0),
+('104', '9007', 4, 4, 'Hufflepuff', '919540004', 375, 450, 4, 4, 0),
+('105', '9008', 1, 0, 'Hogwarts', '919540005', 450, 500, 5, 0, 1),
+('106', '9008', 2, 0, 'Hogwarts', '919540005', 550, 600, 5, 0, 1),
+('107', '9008', 3, 0, 'Hogwarts', '919540005', 700, 800, 5, 0, 1);
+	
+
+INSERT INTO `dummy3`.`housing_staff` (`staffID`, `firstName`, `lastName`, `addrID`, `dateOfBirth`, `sex`, `position`, `housingID`, `houseType`) VALUES 
+('1', 'Minerva', 'McGonagall', '9001', '1950-10-04', 'Female', 'Hall Manager/Supervisor', '201', 'Residence Hall'), 
+('2', 'Severus', 'Snape', '9002', '1953-09-07', 'Male', 'Hall Manager/Supervisor', '202', 'Residence Hall'), 
+('3', 'Filius', 'Flitwick', '9003', '1960-10-06', 'Male', 'Hall Manager/Supervisor', '101', 'GenApartment'), 
+('4', 'Pomona', 'Sprout', '9004', '1965-10-16', 'Female', 'Hall Manager/Supervisor', '103', 'GenApartment'), 
+('5', 'Albus', 'Dumbledore', '9005', '1945-05-23', 'Male', 'Hall Manager/Supervisor', '105', 'SharedApartment');
+
+
+UPDATE `dummy3`.`housing` SET `staffID` = '3' WHERE `housing`.`housingID` = 101;
+UPDATE `dummy3`.`housing` SET `staffID` = '3' WHERE `housing`.`housingID` = 102;
+
+UPDATE `dummy3`.`housing` SET `staffID` = '4' WHERE `housing`.`housingID` = 103;
+UPDATE `dummy3`.`housing` SET `staffID` = '4' WHERE `housing`.`housingID` = 104;
+
+UPDATE `dummy3`.`housing` SET `staffID` = '5' WHERE `housing`.`housingID` = 105;
+UPDATE `dummy3`.`housing` SET `staffID` = '5' WHERE `housing`.`housingID` = 106;
+UPDATE `dummy3`.`housing` SET `staffID` = '5' WHERE `housing`.`housingID` = 107;
+
+UPDATE `dummy3`.`housing` SET `staffID` = '1' WHERE `housing`.`housingID` = 201;
+UPDATE `dummy3`.`housing` SET `staffID` = '2' WHERE `housing`.`housingID` = 202;
+
+
+
+INSERT INTO `dummy3`.`places` (`placeID`, `housingID`, `monthlyRent`, `roomNo`, `peopleID`, `occupied`) VALUES 
+('001', '201', '400', '1', 100540001, '1'), 
+('002', '201', '400', '2', 100540003, '1'), 
+('003', '201', '400', '3', 100540004, '1'), 
+('004', '201', '400', '4', NULL, '0'), 
+('005', '201', '400', '5', NULL, '0'),
+
+('006', '202', '450', '1', 100540007, '1'), 
+('007', '202', '450', '2', NULL, '0'), 
+('008', '202', '450', '3', NULL, '0'),
+
+('001', '101', '350', '1', 100540002, '1'),
+('002', '101', '350', '2', NULL, '0'), 
+('003', '101', '350', '3', NULL, '0'), 
+ 
+('004', '102', '350', '1', 200540001, '1'), 
+('005', '102', '350', '2', 200540002, '1'), 
+('006', '102', '350', '3', NULL, '0'), 
+('007', '102', '350', '4', NULL, '0'), 
+
+('008', '103', '375', '1', 100540005, '1'),
+('009', '103', '375', '2', 100540006, '1'),
+('010', '103', '375', '3', NULL, '0'),
+
+('011', '104', '375', '1', NULL, '0'),
+('012', '104', '375', '2', NULL, '0'),
+('013', '104', '375', '3', NULL, '0'),
+('014', '104', '375', '4', NULL, '0');
+
+
+INSERT INTO `dummy3`.`parking_lot` (`lotID`, `lotName`, `handiCount`, `bikeCount`, `smallCarCount`, `largeCarCount`, `lotType`) VALUES 
+('1', 'Parking Lot 1', '1', '1', '1', '1', 'Private'), 
+('2', 'Parking Lot 2', '1', '1', '3', '1', 'Private'), 
+('3', 'Parking Lot 3', '1', '1', '2', '2', 'Private'), 
+('4', 'Parking Lot 4', '1', '1', '1', '1', 'Private'), 
+('5', 'Parking Lot 5', '2', '2', '2', '2', 'Private'), 
+('6', 'Parking Lot 6', '2', '2', '5', '3', 'Private'), 
+('7', 'Parking Lot 7', '3', '2', '5', '3', 'General');
+
+
+
+INSERT INTO `dummy3`.`parking_spot` (`spotID`, `lotID`, `classification`, `availability`, `category`) VALUES 
+('001','1','Handicapped','1','1'),
+('002','1','Bike','1','1'),
+('003','1','Small Car','1','1'),
+('004','1','Large Car','1','1'),
+('005','2','Handicapped','1','1'),
+('006','2','Bike','1','1'),
+('007','2','Small Car','1','1'),
+('008','2','Small Car','1','1'),
+('009','2','Small Car','1','1'),
+('010','2','Large Car','1','1'),
+('011','3','Handicapped','1','1'),
+('012','3','Bike','1','1'),
+('013','3','Small Car','1','1'),
+('014','3','Small Car','1','1'),
+('015','3','Large Car','1','1'),
+('016','3','Large Car','1','1'),
+('017','4','Handicapped','1','1'),
+('018','4','Bike','1','1'),
+('019','4','Small Car','1','1'),
+('020','4','Large Car','1','1'),
+('021','5','Handicapped','1','1'),
+('022','5','Handicapped','1','1'),
+('023','5','Bike','1','1'),
+('024','5','Bike','1','1'),
+('025','5','Small Car','1','1'),
+('026','5','Small Car','1','1'),
+('027','5','Large Car','1','1'),
+('028','5','Large Car','1','1'),
+('029','6','Handicapped','1','1'),
+('030','6','Handicapped','1','1'),
+('031','6','Bike','1','1'),
+('032','6','Bike','1','1'),
+('033','6','Small Car','1','1'),
+('034','6','Small Car','1','1'),
+('035','6','Small Car','1','1'),
+('036','6','Small Car','1','1'),
+('037','6','Small Car','1','1'),
+('038','6','Large Car','1','1'),
+('039','6','Large Car','1','1'),
+('040','6','Large Car','1','1'),
+('041','7','Handicapped','1','1'),
+('042','7','Handicapped','1','1'),
+('043','7','Bike','1','1'),
+('044','7','Bike','1','1'),
+('045','7','Small Car','1','1'),
+('046','7','Small Car','1','1'),
+('047','7','Small Car','1','1'),
+('048','7','Small Car','1','1'),
+('049','7','Small Car','1','1'),
+('050','7','Large Car','1','1'),
+('051','7','Large Car','1','1'),
+('052','7','Large Car','1','1');
+
+
+
+
+INSERT INTO `dummy3`.`lease` (`peopleID`, `placeID`, `housingID`, `leaseID`, `sem1`, `sem2`, `summer`, `entrydate`, `exitDate`, `securityDeposit`, `penalty`, `cutOffDate`, `rent`) VALUES 
+('100540001', '001', '201', '1', '0', '1', '1', '2015-01-01', '2015-07-31', '400', NULL, '2015-06-01', 400), 
+('100540002', '001', '101', '2', '0', '1', '1', '2015-01-01', '2015-07-31', '400', NULL, '2015-06-01', 350),
+('100540003', '002', '201', '3', '0', '1', '0', '2015-01-01', '2015-05-31', '400', NULL, '2015-04-01', 400),
+('100540004', '003', '201', '4', '0', '1', '1', '2015-01-01', '2015-07-31', '400', NULL, '2015-06-01', 400),
+('100540005', '008', '103', '5', '0', '1', '0', '2015-01-01', '2015-05-31', '450', NULL, '2015-04-01', 375),
+('100540006', '009', '103', '6', '0', '1', '1', '2015-01-01', '2015-07-31', '450', NULL, '2015-06-01', 375),
+('100540007', '006', '202', '7', '0', '1', '1', '2015-01-01', '2015-07-31', '500', NULL, '2015-06-01', 450),
+('200540001', '004', '102', '8', '0', '1', '0', '2015-03-01', '2015-04-30', '400', NULL, '2015-03-01', 350),
+('200540002', '005', '102', '9', '0', '1', '0', '2015-04-01', '2015-04-30', '400', NULL, '2015-04-01', 350),
+('100540008', NULL, '107', '10', '0', '1', '1', '2015-01-01', '2015-07-31', '800', NULL, '2015-06-01', 2100);
+
+
+
+UPDATE parking_spot SET availability = 0 WHERE spotID = 2;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 3;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 7;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 13;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 25;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 27;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 38;
+UPDATE parking_spot SET availability = 0 WHERE spotID = 45;
+
+UPDATE people SET housingID = 201, placeID = 1, spotID = 3, leaseID = 1 WHERE peopleID = 100540001;
+UPDATE people SET housingID = 101, placeID = 1, spotID = 13, leaseID = 2 WHERE peopleID = 100540002;
+UPDATE people SET housingID = 201, placeID = 2, spotID = 2, leaseID = 3 WHERE peopleID = 100540003;
+UPDATE people SET housingID = 201, placeID = 3, spotID = NULL, leaseID = 4 WHERE peopleID = 100540004;
+UPDATE people SET housingID = 103, placeID = 8, spotID = 27, leaseID = 5 WHERE peopleID = 100540005;
+UPDATE people SET housingID = 103, placeID = 9, spotID = 25, leaseID = 6 WHERE peopleID = 100540006;
+UPDATE people SET housingID = 202, placeID = 6, spotID = 7, leaseID = 7 WHERE peopleID = 100540007;
+UPDATE people SET housingID = 102, placeID = 4, spotID = 45, leaseID = 8 WHERE peopleID = 200540001;
+UPDATE people SET housingID = 102, placeID = 5, spotID = NULL, leaseID = 9 WHERE peopleID = 200540002;
+UPDATE people SET housingID = 107, placeID = NULL, spotID = 38, leaseID = 10 WHERE peopleID = 100540008;
+
+
+INSERT INTO `dummy3`.`nearby` (`lotID`, `housingID`) VALUES 
+('1', '201'), 
+('2', '202'), 
+('3', '101'), 
+('3', '102'), 
+('4', '101'), 
+('4', '102'), 
+('5', '103'), 
+('5', '104'), 
+('6', '105'), 
+('6', '106'), 
+('6', '107');
+
+
+
+
+INSERT INTO `dummy3`.`login` (`ID`, `password`, `firstName`, `lastName`, `author`) VALUES 
+('100540001', MD5('123'), 'Harry', 'Potter', 'Student'), 
+('100540002', MD5('123'), 'Draco', 'Malfoy', 'Student'), 
+('100540003', MD5('123'), 'Ron', 'Weasley', 'Student'), 
+('100540004', MD5('123'), 'Hermione', 'Granger', 'Student'), 
+('100540005', MD5('123'), 'Fred', 'Weasley', 'Student'), 
+('100540006', MD5('123'), 'George', 'Weasley', 'Student'), 
+('100540007', MD5('123'), 'Bill', 'Weasley', 'Student'), 
+('100540008', MD5('123'), 'Vernon', 'Dursley', 'Student'), 
+('200540001', MD5('123'), 'Viktor', 'Krum', 'Guest'), 
+('200540002', MD5('123'), 'Olympe', 'Maxime', 'Guest'), 
+('1', MD5('123'), 'Minerva', 'McGonagall', 'Staff'), 
+('2', MD5('123'), 'Severus', 'Snape', 'Staff'), 
+('3', MD5('123'), 'Filius', 'Flitwick', 'Staff'), 
+('4', MD5('123'), 'Pomona', 'Sprout', 'Staff'), 
+('5', MD5('123'), 'Albus', 'Dumbledore', 'Staff');
+
+
+
+
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Semester' WHERE `lease`.`leaseID` = 1;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Semester' WHERE `lease`.`leaseID` = 2;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Monthly' WHERE `lease`.`leaseID` = 3;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Monthly' WHERE `lease`.`leaseID` = 4;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Monthly' WHERE `lease`.`leaseID` = 5;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Semester' WHERE `lease`.`leaseID` = 6;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Semester' WHERE `lease`.`leaseID` = 7;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Monthly' WHERE `lease`.`leaseID` = 8;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Monthly' WHERE `lease`.`leaseID` = 9;
+UPDATE `dummy3`.`lease` SET `paymentOption` = 'Semester' WHERE `lease`.`leaseID` = 10;
+
+
+
+INSERT INTO `dummy3`.`likeness` (`peopleID`, `likeness`) VALUES 
+('100540001', '0'), ('100540002', '0'), 
+('100540003', '0'), ('100540004', '0'), 
+('100540005', '0'), ('100540006', '0'), 
+('100540007', '0'), ('100540008', '0'), 
+('200540001', '0'), ('200540002', '0');
+
+
+
+
+
+ 
+
+

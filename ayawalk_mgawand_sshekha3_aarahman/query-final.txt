@@ -1,0 +1,344 @@
+
+
+/* This is the text file containing the sql CREATE TABLE statements and the 
+we are using the check constraints to capture the following constraints:-
+
+1.In parking_spot table we use the following constraints:-
+
+CHECK (availability = 0 OR 1)
+To check the parking spot availability
+
+CHECK (classification = `Handicapped` OR `SmallCar` OR `LargeCar` OR `Bike`)
+To check if the classification field has a valid entry
+
+CHECK(category =1 OR 2)
+category field is reserved to check if the spot is reserved for students(1) or if the guests are also allowed.(2)
+
+2.In people Table we use the following constraints:-
+
+CHECK (smoker =`Yes` OR `No`),
+To check if the person is a smoker or not
+
+CHECK (family =`Yes` OR `No`)
+To check if the person has a family living with him or not
+
+CHECK (category =`Freshman` OR `Sophomore` OR `Junior` OR `Senior` OR `Graduate` OR ` Visitor` OR `Phd`)
+To check his year of education
+
+3.In the Resident hall Table we use the following constraints:-
+
+CHECK (eligibility =`1` OR `2` OR `3`)
+This specifies whether the hall is eligible only for graduate students(1), other students as well(2), guests as well(3)
+
+4. In the Places table we use the following constraints:-
+
+CHECK (occupied = `Yes` OR `No`)
+This checks whether the place is available for new student requests or is occupied
+
+
+
+
+*/
+
+
+
+CREATE TABLE Address(
+addrID int NOT NULL,
+street varchar(50),
+city varchar(20),
+country varchar(20),
+zipcode int,
+CONSTRAINT address_pk PRIMARY KEY (addrID)
+);
+
+CREATE TABLE Parking_Lot(
+lotID int,
+lotName varchar(20),
+handiCount int,
+bikeCount int,
+smallCarCount int,
+largeCarCount int,
+lotType varchar(20),  
+PRIMARY KEY(lotID));
+
+CREATE TABLE Parking_Spot(
+spotID int,
+lotID int,
+classification varchar(20),
+availability int,
+category int, 
+PRIMARY KEY (spotID), 
+FOREIGN KEY (lotID) REFERENCES Parking_Lot(lotID) ON DELETE CASCADE, 
+CHECK (availability = 0 OR 1),
+CHECK (classification = `Handicapped` OR `SmallCar` OR `LargeCar` OR `Bike`),
+CHECK(category =1 OR 2));
+
+CREATE TABLE people(
+peopleID int, 
+firstName varchar(20), 
+lastName varchar(20),
+phone int(20), 
+alternatePhone int(20),  
+addrID int, 
+dateOfBirth date, 
+sex char(10), 
+category varchar(20), 
+nationality varchar(20),
+smoker varchar(20),
+specialNeeds varchar(100),
+additionalComments varchar(20), 
+currentStatus varchar(20),
+courseName varchar(50), 
+family varchar(20),
+housingID int,
+placeID int(20),
+spotID int(20),
+leaseID int(20),
+available int,
+PRIMARY KEY (peopleID), 
+FOREIGN KEY (addrID) REFERENCES Address(addrID), 
+FOREIGN KEY (spotID) REFERENCES Parking_Spot(spotID),
+CHECK (smoker =`Yes` OR `No`),
+CHECK (family =`Yes` OR `No`),
+CHECK (category =`Freshman` OR `Sophomore` OR `Junior` OR `Senior` OR `Graduate` OR ` Visitor` OR `Phd`));
+
+CREATE TABLE Kin(
+peopleID int, 
+name varchar(50), 
+relationship varchar(20), 
+telephone varchar(20), 
+addrID int, 
+PRIMARY KEY (peopleID, name), 
+FOREIGN KEY (peopleID) REFERENCES people(peopleID) ON DELETE CASCADE, 
+FOREIGN KEY (addrID) REFERENCES Address(addrID)
+); 
+
+
+CREATE TABLE Family(
+name varchar(50), 
+peopleID int, 
+dateOfBirth date, 
+CONSTRAINT family_pk PRIMARY KEY(name, peopleID), 
+CONSTRAINT family_fk FOREIGN KEY(peopleID) REFERENCES people(peopleID) ON DELETE CASCADE
+); 
+CREATE TABLE Housing(
+housingID int, 
+housingname varchar(20),
+addrID int, 
+available int(1),
+type varchar(20), 
+CONSTRAINT housing_pk PRIMARY KEY(housingID), 
+CONSTRAINT housing_fk FOREIGN KEY(addrID) REFERENCES Address(addrID));
+ 
+
+
+CREATE TABLE Residence_Hall( 
+housingID int, 
+name varchar(20), 
+addrID int, 
+telephoneNo varchar(20), 
+staffID int(20),
+noRooms int, 
+rent int,
+sequrityDeposit int,
+nearbyLotID int(20),
+eligibility int,
+remaining int, 
+CHECK (eligibility =`1` OR `2` OR `3`), 
+CONSTRAINT residence_pk PRIMARY KEY(housingID), 
+CONSTRAINT residence_fk FOREIGN KEY(housingID) references Housing(housingID),
+CONSTRAINT residence_fk2 FOREIGN KEY(addrID) references Address(addrID) );
+
+
+
+CREATE TABLE IF NOT EXISTS `Apartment` (
+`housingID` int(20) NOT NULL,
+`addrID` int(20) NOT NULL,
+`noBed` int(11) DEFAULT NULL,
+`noBath` int(11) DEFAULT NULL,
+`apartmentComplexName` varchar(20) NOT NULL,
+`phoneNumber` varchar(20) NOT NULL,
+`rentPerBedroom` int(11) NOT NULL,
+`secuDeposit` int(11) NOT NULL,
+`managerID` int(11) NOT NULL,
+`roomNumber` int(11) DEFAULT NULL,
+`apartmentType` int,
+PRIMARY KEY(housingID),
+CONSTRAINT `apt_fk2` FOREIGN KEY(`housingID`) REFERENCES `Housing` (`housingID`),
+CONSTRAINT `apartment_fk` FOREIGN KEY (`addrID`) REFERENCES `Address` (`addrID`)
+);
+
+
+CREATE TABLE Housing_Staff(
+staffID int(20), 
+firstName varchar(50), 
+lastName varchar(50), 
+addrID int, 
+dateOfBirth date, 
+sex char(10), 
+position varchar(30), 
+housingID int,
+houseType varchar(20), 
+CONSTRAINT housing_staff_pk PRIMARY KEY(staffID),
+CONSTRAINT housing_staff_fk2 FOREIGN KEY(housingID) REFERENCES Housing(housingID), 
+CONSTRAINT housing_staff_address_fk FOREIGN KEY(addrID) REFERENCES Address(addrID)); 
+
+
+
+ALTER TABLE housing ADD COLUMN staffID int;
+ALTER TABLE housing ADD CONSTRAINT housing_staff_fk FOREIGN KEY (staffID) REFERENCES housing_staff(staffID);
+
+
+CREATE TABLE Places( 
+placeID int(20),
+housingID int(20), 
+monthlyRent int NOT NULL, 
+roomNo int, 
+peopleID int(20),
+occupied varchar(10),CHECK (occupied = `Yes` OR `No`),
+Constraint Place_PK Primary KEY(placeID, housingID),
+Constraint places_fk FOREIGN KEY(housingID) REFERENCES Housing(housingID) ON DELETE CASCADE,
+Constraint places_fk2 FOREIGN KEY(peopleID) REFERENCES people(peopleID)
+);
+CREATE TABLE Lease(
+leaseID int(20),
+peopleID int(20), 
+placeID int(20), 
+housingID int(20),
+sem1 int,
+sem2 int,
+summer int,
+entrydate date, 
+exitDate date, 
+securityDeposit int, 
+penalty int, 
+cutOffDate date, 
+rent int,
+paymentOption varchar(20),
+CONSTRAINT Lease_pk PRIMARY KEY(leaseID), 
+CONSTRAINT Lease_fk1 FOREIGN KEY(peopleID) REFERENCES people(peopleID)); 
+
+
+
+
+CREATE TABLE Parking_Requests( 
+requestID int AUTO_INCREMENT, 
+lotID int(20), 
+spotID int(20), 
+peopleID int(20),
+status varchar(20),
+housingID int,
+classification varchar(20),
+nearby int, 
+PRIMARY KEY (requestID), 
+FOREIGN KEY (lotID) REFERENCES Parking_Lot(lotID), 
+FOREIGN KEY (spotID) REFERENCES Parking_Spot(spotID), 
+FOREIGN KEY (peopleID) REFERENCES people(peopleID),
+FOREIGN KEY (housingID) REFERENCES people(housingID) ON DELETE CASCADE
+);
+
+CREATE TABLE Nearby(
+lotID int, 
+housingID int, 
+CONSTRAINT nearby_fk1 FOREIGN KEY (housingID) REFERENCES Housing(housingID),
+CONSTRAINT nearby_fk FOREIGN KEY (lotID) REFERENCES parking_lot(lotID)); 
+
+
+CREATE TABLE Maintenance_Ticket( 
+ticketNo int AUTO_INCREMENT, 
+peopleID int(20), 
+peopleName varchar(20),
+ticketStatus varchar(20), 
+ticketDate Date,
+ticketIssue varchar(20), 
+ticketSeverity int, 
+comments varchar(40),
+housingID int(20),
+staffID int(20), 
+CONSTRAINT maintenanceTicket_pk PRIMARY KEY(ticketNo), 
+CONSTRAINT maintenanceTicket_fk FOREIGN KEY(peopleID) references people(peopleID), 
+CONSTRAINT maintenanceTicket_fk2 FOREIGN KEY(housingID) references Housing(housingID),  
+CONSTRAINT maintenanceTicket_fk3 FOREIGN KEY(staffID) references Housing_Staff(staffID)); 
+
+
+
+CREATE TABLE `Lease_Request` (
+  `LeaseRequestID` int(11) NOT NULL AUTO_INCREMENT,
+  `peopleID` int(20) DEFAULT NULL,
+  `PlaceID` int(20) DEFAULT NULL,
+  `status` varchar(10) DEFAULT NULL,
+  `startDate` date DEFAULT NULL,
+  `endDate` date DEFAULT NULL,
+  `rentalPeriod` int(11) DEFAULT NULL,
+  `preference1` int(20) DEFAULT NULL,
+  `preference2` int(20) DEFAULT NULL,
+  `preference3` int(20) DEFAULT NULL,
+  `paymentMode` varchar(10) DEFAULT NULL,
+  `parkingNeeded` int DEFAULT 0,
+  PRIMARY KEY (`LeaseRequestID`),
+  KEY `lease_request_fk` (`peopleID`),
+  CONSTRAINT `lease_request_fk` FOREIGN KEY (`peopleID`) REFERENCES `people` (`peopleID`)
+);
+
+
+CREATE TABLE `Terminate_Request` (
+  `RequestID` int(11) NOT NULL AUTO_INCREMENT,
+  `peopleID` int(20) DEFAULT NULL,
+  `placeID` int(20) DEFAULT NULL,
+  `terminateDate` date DEFAULT NULL,
+  `status` varchar(10) DEFAULT NULL,
+  `inspectionDate` date DEFAULT NULL,
+  `leaseID` int(20) DEFAULT NULL,
+  `comments` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`RequestID`),
+  KEY `Terminate_Request_fk1` (`peopleID`),
+  KEY `Terminate_Request_fk3` (`leaseID`),
+  KEY `Terminate_Request_fk2` (`placeID`),
+  CONSTRAINT `Terminate_Request_fk1` FOREIGN KEY (`peopleID`) REFERENCES `people` (`peopleID`),
+  CONSTRAINT `Terminate_Request_fk2` FOREIGN KEY (`placeID`) REFERENCES `Places` (`placeID`),
+  CONSTRAINT `Terminate_Request_fk3` FOREIGN KEY (`leaseID`) REFERENCES `Lease` (`leaseID`)
+);
+
+CREATE TABLE parking_fees ( classification varchar(20), rent int);
+INSERT INTO parking_fees VALUES 
+('Handicapped' , 25),
+('Bike', 30),
+('Small Car', 35),
+('Large Car', 40);
+
+
+CREATE TABLE invoice (
+invoiceNo int AUTO_INCREMENT,
+peopleID int(20),
+rent int,
+parkingRent int,
+lateFees int,
+otherCharges int,
+totalDue int,
+leaseID int,
+billDate DATE,
+dueDate DATE,
+placeID int,
+roomNo int,
+housingID int,
+housingname varchar(20),
+paymentDate DATE,
+methodPayment varchar(20),
+finalChargeDeducted int,
+refund int,
+status varchar(20),
+CONSTRAINT invoice_pk PRIMARY KEY(invoiceNo),
+CONSTRAINT invoice_fk1 FOREIGN KEY (housingID) REFERENCES housing(housingID),
+CONSTRAINT invoice_fk2 FOREIGN KEY (peopleID) REFERENCES people(peopleID),
+CONSTRAINT invoice_fk3 FOREIGN KEY (leaseID) REFERENCES lease(leaseID),
+CONSTRAINT invoice_fk4 FOREIGN KEY (placeID) REFERENCES places(placeID)
+);
+
+
+
+CREATE TABLE likeness(
+peopleID int(20),
+likeness int DEFAULT 0,
+PRIMARY KEY(peopleID),
+FOREIGN KEY(peopleID) references people(peopleID) );
+

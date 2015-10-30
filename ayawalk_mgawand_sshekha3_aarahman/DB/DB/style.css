@@ -1,0 +1,376 @@
+body {
+	 font:13px segoe ui,sans-serif;
+	font-size: 11pt;
+	padding: 0px;
+	margin:0px;
+}
+header {
+	background: #CC0000;
+	padding-top: 50px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+section {
+	padding-left: 50px;
+}
+div#Title {
+	color: #CC0000;
+	font-size: 16pt;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+header div#logo {
+	display: inline-block;
+	width: 540px;
+	height: 85px;
+}
+header div#logo img {
+	width: 100%;
+}
+
+div#leftmenu {
+float: left; 
+display: absolute;
+height: 600px;
+width: 250px;
+padding:0px;
+}
+div#leftmenu  img{
+
+width: inherit;
+height: inherit;
+}
+div#housing-options a:link{
+color: blue;
+font-size:100%;
+text-decoration:none;
+}
+div#housing-options a:hover{
+color: #000066;
+font-weight: bold;
+text-decoration:underline;
+}
+div#current-invoice a:link{
+color: light-blue;
+font-size:100%;
+font-weight: bold;
+text-decoration:none;
+}
+div#current-invoice a:hover{
+color: #000066;
+font-weight: bold;
+text-decoration:underline;
+}
+div#former-invoice a:link{
+color: light-blue;
+font-size:100%;
+font-weight: bold;
+text-decoration:none;
+}
+div#former-invoice a:hover{
+color: #000066;
+font-weight: bold;
+text-decoration:underline;
+}
+.text-link:hover{
+	color: #000066;
+	font-weight: bold;
+	cursor:pointer;
+	text-decoration:underline;
+}
+.text-link{
+	color: DarkSlateBlue;
+	font-size:100%;
+	font-weight: bold;
+	text-decoration:none;
+}
+table , th, td {
+    border: 1px solid black;
+	text-align: center;
+	border-collapse: collapse;
+	border-color: gray;
+}
+table{
+	width:100%;
+}
+
+
+div#new_lease_req_container:hover{
+font-weight: bold;
+color: dark-blue;
+cursor:pointer;
+}
+div#new_lease_req_container{
+color: blue;
+text-decoration: none;
+border: 1px;
+}
+
+div#terminate_req_container:hover{
+font-weight: bold;
+color: dark-blue;
+cursor:pointer;
+}
+div#terminate_req_container{
+color: blue;
+text-decoration: none;
+border: 1px;
+}
+div#cancel_req_container:hover{
+font-weight: bold;
+color: dark-blue;
+cursor:pointer;
+}
+div#cancel_req_container{
+color: blue;
+text-decoration: none;
+border: 1px;
+}
+div#view_req_container:hover{
+font-weight: bold;
+color: dark-blue;
+cursor:pointer;
+}
+div#view_req_container{
+color: blue;
+text-decoration: none;
+border: 1px;
+}
+div#disp-current-invoice{
+padding-bottom:20px;
+padding-left: 20px;
+padding-right: 20px;
+padding-right: 20px;
+border: 1px;
+}
+.parking-container{
+    border: 2px solid #a1a1a1;
+    padding: 20px; 
+    width: 500px;
+    border-radius: 10px;
+}
+.box-container{    border: 2px solid #a1a1a1;
+    padding: 20px; 
+    width: 800px;
+    border-radius: 10px;
+}
+
+div#overall-container{
+padding-left:100px;
+width: 80%;
+}
+div#top-button{
+width: 100%;
+margin: auto;
+}
+div#profile-section{
+width: 100%;
+margin: auto;
+}
+div#left-menu{
+width: 30%;
+margin: auto;
+float: left;
+}
+div#right-menu{
+width: 70%;
+float:left;
+margin: auto;
+}
+div#bottom-button{
+width: 100%;
+margin: auto;
+}
+
+
+div#period-leave{
+    border: 2px solid #a1a1a1;
+    padding: 20px; 
+    width: 500px;
+    border-radius: 10px;
+}
+div#cancel-req-box{
+    border: 2px solid #a1a1a1;
+    padding: 20px; 
+    width: 500px;
+    border-radius: 10px;
+}
+div#term-leave
+{
+    border: 2px solid #a1a1a1;
+    padding: 20px; 
+    width: 500px;
+    border-radius: 10px;
+}
+div#term-leave-reason
+{
+    border: 2px solid #a1a1a1;
+    padding: 20px; 
+    width: 500px;
+	height: 120px;
+    border-radius: 10px;
+}
+header a:link, header a:visited {
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: none;
+}
+header a:hover {
+	text-decoration: underline;	
+}
+header {
+	color: #FFFFFF;
+}
+a:hover {
+	color: #000000;	
+}
+a:link, a:visited {
+	color: blue;
+	text-decoration: none;
+}
+#login-form {
+	margin: 10px;
+}
+#login-form .form-label {
+	display: block;
+	margin: 0 0 5px;
+}
+#login-form em{
+	size: 9pt;
+	margin: 0px;
+	font-family: Times New Roman;
+	color: #AAAAAA;
+}
+
+#login-form input.text{
+	border: 1px solid #AAAAAA;
+	height: 20px;
+	width: 270px;
+	padding: 4px;
+}
+#login-form input.text-name{
+	border: 1px solid #AAAAAA;
+	height: 20px;
+	width: 130px;
+	margin: 0 10px 0 0;
+	padding: 4px;
+}
+ul {
+	padding: 0px;
+	margin: 0px;
+}
+ul#courses li
+{
+	list-style-type: none;
+	padding: 10px;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	border: 1px solid;
+	border-radius: 5px;
+	width:800px;
+}
+em.info {
+	size: 10pt;
+	color: #666699;
+}
+em.groupinfo {
+	size: 10pt;
+	color: #505050;
+}
+div#nav {
+	width: 800px;
+	height: 20px;
+}
+span#nav_links_left {
+	float: left;
+}
+span#nav_links_right {
+	float: right;
+}
+div#GroupBox {
+	padding: 4px;
+	margin: 0px;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	width: 270px;
+}
+div#StudentContainer {
+    float:left;
+	width:75%;
+	
+}
+div#messageboard {
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	border: 1px solid #a1a1a1;
+	box-shadow: 1px 1px 5px #888888;
+	border-radius: 5px;
+}
+div#StudentList {
+	float: left;
+	width: 49%;
+	border: 1px solid #a1a1a1;
+	box-shadow: 1px 1px 5px #888888;
+	border-radius: 5px;
+}
+div#StudentList ul {
+	padding: 0px;
+	margin: 0px;
+}
+div#StudentList li {
+	list-style-type: none;
+	padding: 5px;
+	margin: 0px;
+}
+div#StudentList li:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+div#GroupContainer {
+    float:left;
+	width:75%;
+	
+}
+div#GroupList {
+	float: left;
+	width: 60%;
+	border: 1px solid #a1a1a1;
+	box-shadow: 1px 1px 5px #888888;
+	border-radius: 5px;
+}
+div#GroupList ul {
+	padding: 0px;
+	margin: 0px;
+}
+div#GroupList li {
+	list-style-type: none;
+	padding: 5px;
+	margin: 0px;
+}
+div#GroupList li:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+div#StudentSelected {
+	float: right;
+	width: 49%;
+	border: 1px solid #a1a1a1;
+	box-shadow: 1px 1px 5px #888888;
+	border-radius: 5px;
+}
+	
+div#StudentSelected ul {
+	padding: 0px;
+	margin: 0px;
+}
+div#StudentSelected li {
+	list-style-type: none;
+	padding: 5px;
+	margin: 0px;
+}
+div#StudentSelected li:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}

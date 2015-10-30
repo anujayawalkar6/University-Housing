@@ -1,0 +1,28 @@
+INSERT INTO `student_housing`.`univ_people` (`peopleID`, `currentStatus`, `category`, `dateOfBirth`, `available`, `sex`, `program`, 
+`specialNeeds`, `nationality`, `courseName`, `phone`, `alternatePhone`, `firstName`, `lastName`, `additionalComments`, `addressID`, `housingID`, 
+`leaseID`, `permitID`) VALUES ('S00003', 'placed', 'G', '1995-10-07', '1', 'F', 'MS', 'compulsive drinker', 'INDIAN', 'CSE', '9999900002', NULL, 
+'Anuja', 'Yawalkar', NULL, 'ADDR3', NULL, NULL, NULL);
+
+INSERT INTO `student_housing`.`univ_people` (`peopleID`, `currentStatus`, `category`, `dateOfBirth`, `available`, `sex`, `program`, 
+`specialNeeds`, `nationality`, `courseName`, `phone`, `alternatePhone`, `firstName`, `lastName`, `additionalComments`, `addressID`, `housingID`, 
+`leaseID`, `permitID`) VALUES ('S00004', 'placed', 'P', '1989-10-04', '1', 'M', 'PHD', 'none', 'BANGLADESH', 'CSE', '9999900003', NULL, 
+'Akond', 'Rahman', NULL, 'ADDR2', NULL, NULL, NULL);
+
+INSERT INTO `student_housing`.`login` (`username`, `password`, `peopleID`, `firstName`, `lastName`)
+ VALUES ('mgawand', MD5('123'), 'S00002', 'Mithilesh', 'G');
+ 
+ INSERT INTO `student_housing`.`login` (`username`, `password`, `peopleID`, `firstName`, `lastName`)
+ VALUES ('ayawalk', MD5('123'), 'S00003', 'Anuja', 'Yawalkar');
+ 
+ INSERT INTO `student_housing`.`login` (`username`, `password`, `peopleID`, `firstName`, `lastName`)
+ VALUES ('aarahman', MD5('123'), 'S00004', 'Akond', 'Rahman');
+ 
+ INSERT INTO `student_housing`.`univ_people` (`peopleID`, `currentStatus`, `category`, `dateOfBirth`, `available`, `sex`, `program`, 
+`specialNeeds`, `nationality`, `courseName`, `phone`, `alternatePhone`, `firstName`, `lastName`, `additionalComments`, `addressID`, `housingID`, 
+`leaseID`, `permitID`) VALUES ('G00001', 'placed', 'G', '1989-01-04', '1', 'M', 'MS', 'none', 'USA', 'CSE', '9999900004', NULL, 
+'Bruce', 'Wayne', NULL, 'ADDR3', NULL, NULL, NULL);
+
+  INSERT INTO `student_housing`.`login` (`username`, `password`, `peopleID`, `firstName`, `lastName`)
+ VALUES ('guest1', MD5('123'), 'G00001', 'Bruce', 'Wayne');
+ 
+ 
